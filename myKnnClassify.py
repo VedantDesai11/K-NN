@@ -77,6 +77,7 @@ if __name__ == '__main__':
 	accuracies = []
 	algoAccuracies = []
 
+	# Creating 2 samples
 	Xtrain = np.concatenate((createData(mu_list[0], sigma_list[0], N_train, 'Training', 0), createData(mu_list[1], sigma_list[1], N_train, 'Training', 1)))
 	Xtest = np.concatenate((createData(mu_list[0], sigma_list[0], N_test, 'Testing', 0), createData(mu_list[1], sigma_list[1], N_test, 'Testing', 1)))
 
