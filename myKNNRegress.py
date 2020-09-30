@@ -79,5 +79,21 @@ if __name__ == '__main__':
 	train = createData(mu, sigma, N_train, 'train', False)
 	test = createData(mu, sigma, N_test, 'test', False)
 
+	for k in k_list:
+		temp_error = []
+		for i in range(5):
+			predictions = myKnnRegress(train, test, k)
 
+			squaredError = 0
+
+			for i, prediction in enumerate(predictions):
+				squaredError += (prediction - test[i][2]) ** 2
+
+			temp_error.append(squaredError/N_test)
+
+		errors.append(sum(temp_error) / len(temp_error))
+
+	print(errors)
+	plt.plot(k_list, errors)
+	plt.show()
 

@@ -51,9 +51,17 @@ def myKnnRegress(train, test, k=5):
 			trainLabel = train[ii][2]
 
 			# calculate distance for each point and append with label
-			distanceList.append([euclideanDistance([train_point[0],train_point[1]],[test_point[0],test_point[1]]), trainLabel])
+			distanceList.append([euclideanDistance([train_point[0],train_point[1]],[test_point[0],test_point[1]]), trainLabel, [train_point[0],train_point[1],test_point[0],test_point[1]]])
 
 		distanceList = sorted(distanceList, key=lambda x: x[0])[:k]
+
+		'''
+		Weights = []
+
+		for value in distanceList:
+			trainx, trainy, testx, testy = value[2][0], value[2][1], value[2][2], value[2][3]
+			Weights.append([sqrt((trainx-testx)**2), sqrt((trainy-testy)**2)])
+		'''
 
 		Weights = [1/i[0] for i in distanceList]
 
@@ -73,8 +81,8 @@ if __name__ == '__main__':
 	sigma = np.array([[1, 0.75], [0.75, 1]])
 	N_train = 300
 	N_test = 100
-	k_list = [1,2,3,5,10,20,50,100]
-	#k_list = [3]
+	#k_list = [1,2,3,5,10,20,50,100]
+	k_list = [3]
 	errors = []
 	train = createData(mu, sigma, N_train, 'train', False)
 	test = createData(mu, sigma, N_test, 'test', False)
@@ -84,12 +92,12 @@ if __name__ == '__main__':
 		for i in range(5):
 			predictions = myKnnRegress(train, test, k)
 
-			error = 0
+			squaredError = 0
 
 			for i, prediction in enumerate(predictions):
-				error += sqrt((prediction - test[i][2]) ** 2)
+				squaredError += (prediction - test[i][2]) ** 2
 
-			temp_error.append(error / N_test)
+			temp_error.append(squaredError/N_test)
 
 		errors.append(sum(temp_error) / len(temp_error))
 
