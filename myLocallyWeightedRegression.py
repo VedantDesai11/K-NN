@@ -55,11 +55,13 @@ def myKnnRegress(train, test, k=5):
 
 		distanceList = sorted(distanceList, key=lambda x: x[0])[:k]
 
-		s = 0
-		for value in distanceList:
-			s += value[1]
+		Weights = [1/i[0] for i in distanceList]
 
-		predictions.append(s//k)
+		s = 0
+		for i, value in enumerate(distanceList):
+			s += value[1] * Weights[i]
+
+		predictions.append(s/sum(Weights))
 
 	return predictions
 
@@ -72,26 +74,26 @@ if __name__ == '__main__':
 	N_train = 300
 	N_test = 100
 	k_list = [1,2,3,5,10,20,50,100]
-	#k_list = [1,2,3]
-	accuracies = []
-
-
+	#k_list = [3]
+	errors = []
 	train = createData(mu, sigma, N_train, 'train', False)
 	test = createData(mu, sigma, N_test, 'test', False)
 
 	for k in k_list:
-		temp_accuracy = []
+		temp_error = []
 		for i in range(5):
 			predictions = myKnnRegress(train, test, k)
-			correct = 0
+
+			error = 0
 
 			for i, prediction in enumerate(predictions):
-				if prediction == int(test[i][2]):
-					correct += 1
+				error += sqrt((prediction - test[i][2]) ** 2)
 
-			temp_accuracy.append(correct/N_test * 100)
+			temp_error.append(error / N_test)
 
-		accuracies.append(f'Accuracy (k = {k}): {sum(temp_accuracy)/len(temp_accuracy):.2f}%')
+		errors.append(sum(temp_error) / len(temp_error))
 
-	print(accuracies)
+	print(errors)
+	plt.plot(k_list, errors)
+	plt.show()
 

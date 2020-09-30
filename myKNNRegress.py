@@ -59,7 +59,7 @@ def myKnnRegress(train, test, k=5):
 		for value in distanceList:
 			s += value[1]
 
-		predictions.append(s//k)
+		predictions.append(s/k)
 
 	return predictions
 
@@ -73,25 +73,11 @@ if __name__ == '__main__':
 	N_test = 100
 	k_list = [1,2,3,5,10,20,50,100]
 	#k_list = [1,2,3]
-	accuracies = []
+	errors = []
 
 
 	train = createData(mu, sigma, N_train, 'train', False)
 	test = createData(mu, sigma, N_test, 'test', False)
 
-	for k in k_list:
-		temp_accuracy = []
-		for i in range(5):
-			predictions = myKnnRegress(train, test, k)
-			correct = 0
 
-			for i, prediction in enumerate(predictions):
-				if prediction == int(test[i][2]):
-					correct += 1
-
-			temp_accuracy.append(correct/N_test * 100)
-
-		accuracies.append(f'Accuracy (k = {k}): {sum(temp_accuracy)/len(temp_accuracy):.2f}%')
-
-	print(accuracies)
 
